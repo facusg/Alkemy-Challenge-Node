@@ -8,7 +8,7 @@ class Server {
     this.app = express();
     this.port = process.env.PORT || 8080;
 
-    this.paths = { auth: "/auth" };
+    this.paths = { auth: "/auth", characters: "/api/characters" };
 
     //Database
     this.dbConnection();
@@ -41,6 +41,7 @@ class Server {
 
   routes() {
     this.app.use(this.paths.auth, require("../routes/auth"));
+    this.app.use(this.paths.characters, require("../routes/characters"));
   }
 
   listen() {
