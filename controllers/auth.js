@@ -1,11 +1,73 @@
 const { response } = require("express");
+const User = require("../models/user");
+const bcryptjs = require("bcryptjs");
 
-const login = (req, res = response) => {
-  res.json({ msg: "Login" });
+const { createJWT } = require("../helpers/createJWT");
+
+const login = async (req, res = response) => {
+  const { email, password } = req.body;
+
+  console.log(email);
+
+  try {
+    //check Email in database
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ msg: "Incorrect email or password. - email" });
+    }
+
+    // chech State=true
+    if (!user.state) {
+      return res
+        .status(400)
+        .json({ msg: "Incorrect email or password. - state:false" });
+    }
+
+    const validPassword = bcryptjs.compareSync(password, user.password);
+    if (!validPassword) {
+      return res
+        .status(400)
+        .json({ msg: "Incorrect email or password. - Password" });
+    }
+
+    //Create JWT
+    const token = await createJWT(user.id);
+
+    res.json({
+      user,
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error" });
+  }
 };
 
-const register = (req, res = response) => {
-  res.json({ msg: "Register" });
+const register = async (req, res = response) => {
+  const { name, email, password } = req.body;
+
+  let user = await User.findOne({ where: { email } });
+
+  if (user) {
+    return res.status(401).json({ msg: "Email is already registered" });
+  }
+
+  user = new User({ name, email, password });
+
+  const salt = bcryptjs.genSaltSync();
+  user.password = bcryptjs.hashSync(password, salt);
+
+  await user.save();
+
+  //Create JWT
+  const token = await createJWT(user.id);
+
+  res.json({
+    user,
+    token,
+  });
 };
 
 module.exports = { login, register };

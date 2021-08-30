@@ -20,7 +20,9 @@ class Server {
 
   async dbConnection() {
     try {
-      await sequelize.authenticate();
+      //await sequelize.authenticate();
+      //Force true:DROP TABLES
+      await sequelize.sync({ force: false });
       console.log("Database online");
     } catch (error) {
       console.log(error);
