@@ -8,10 +8,14 @@ class Server {
     this.app = express();
     this.port = process.env.PORT || 8080;
 
+    this.paths = { auth: "/auth" };
+
     //Database
     this.dbConnection();
 
     this.middlewares();
+
+    this.routes();
   }
 
   async dbConnection() {
@@ -31,6 +35,10 @@ class Server {
 
     // Public
     this.app.use(express.static("public"));
+  }
+
+  routes() {
+    this.app.use(this.paths.auth, require("../routes/auth"));
   }
 
   listen() {
