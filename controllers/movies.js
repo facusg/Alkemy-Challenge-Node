@@ -29,7 +29,7 @@ const movieDetails = async (req, res = response) => {
 };
 
 const createMovie = async (req, res = response) => {
-  const { title, ...body } = req.body;
+  const { title, date, ...body } = req.body;
   const movieDB = await Movie.findOne({ where: { title } });
 
   if (movieDB) {
@@ -42,6 +42,7 @@ const createMovie = async (req, res = response) => {
   }
   const data = {
     ...body,
+    date: validDate,
     title: title.toUpperCase(),
   };
 

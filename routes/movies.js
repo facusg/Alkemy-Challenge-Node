@@ -36,7 +36,6 @@ router.post(
     check("rate", "Rate is required").not().isEmpty(),
     check("rate").custom(isRateValid),
     check("date", "date is required").not().isEmpty(),
-    check("date", "date is required").isDate(),
     fieldValidator,
   ],
   createMovie

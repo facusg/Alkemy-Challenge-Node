@@ -7,6 +7,8 @@ const {
   createCharacter,
   updateCharacter,
   deleteCharacter,
+  addMovieToCharacter,
+  removeMovieToCharacter,
 } = require("../controllers/characters");
 
 const { existCharacterbyId } = require("../helpers/db-validator");
@@ -54,6 +56,10 @@ router.put(
   ],
   updateCharacter
 );
+
+router.put("/:id/:movieId", addMovieToCharacter);
+
+router.delete("/:id/:movieId", removeMovieToCharacter);
 
 router.delete(
   "/:id",

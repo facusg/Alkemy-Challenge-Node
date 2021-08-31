@@ -1,6 +1,7 @@
 const { response } = require("express");
 const Character = require("../models/character");
 const Movie = require("../models/movie");
+const CharacterMovie = require("../models/character_movie");
 
 const charactersList = async (req, res = response) => {
   const { limit = 5, since = 0 } = req.query;
@@ -22,7 +23,7 @@ const charactersList = async (req, res = response) => {
 const characterDetails = async (req, res = response) => {
   const { id } = req.params;
   const character = await Character.findByPk(id, {
-    include: { model: Movie },
+    include: { model: Movie, as: "movies", attribute: ["id", "title"] },
   });
 
   res.json({ character });
@@ -35,6 +36,7 @@ const createCharacter = async (req, res = response) => {
   if (characterDB) {
     return res.status(401).json({ msg: `${name} is already a character ` });
   }
+
   const data = {
     ...body,
     name: name.toUpperCase(),
@@ -70,10 +72,40 @@ const deleteCharacter = async (req, res = response) => {
   res.json({ characterDelete });
 };
 
+const addMovieToCharacter = async (req, res = response) => {
+  const { id, movieId } = req.params;
+
+  const character = await Character.findByPk(id);
+
+  const movie = await Movie.findByPk(movieId);
+
+  if (!(await character.hasMovie(movie))) {
+    character.addMovie(movie);
+  }
+
+  res.json({ character });
+};
+
+const removeMovieToCharacter = async (req, res = response) => {
+  const { id, movieId } = req.params;
+
+  const character = await Character.findByPk(id);
+
+  const movie = await Movie.findByPk(movieId);
+
+  if (await character.hasMovie(movie)) {
+    character.removeMovie(movie);
+  }
+
+  res.json({ character });
+};
+
 module.exports = {
   charactersList,
   characterDetails,
   createCharacter,
   updateCharacter,
   deleteCharacter,
+  addMovieToCharacter,
+  removeMovieToCharacter,
 };
