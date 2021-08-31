@@ -17,8 +17,11 @@ const charactersList = async (req, res = response) => {
   res.json({ total, characters });
 };
 
-const characterDetails = (req, res = response) => {
-  res.json({ msg: "characterDetails" });
+const characterDetails = async (req, res = response) => {
+  const { id } = req.params;
+  const character = await Character.findByPk(id);
+
+  res.json({ character });
 };
 
 const createCharacter = async (req, res = response) => {

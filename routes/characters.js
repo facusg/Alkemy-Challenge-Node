@@ -8,6 +8,8 @@ const {
   updateCharacter,
   deleteCharacter,
 } = require("../controllers/characters");
+
+const { existCharacterbyId } = require("../helpers/db-validator");
 const { checkJWT } = require("../middlewares/checkJWT");
 
 const { fieldValidator } = require("../middlewares/field-validator");
@@ -16,7 +18,16 @@ const router = Router();
 
 router.get("/", charactersList);
 
-router.get("/:id", characterDetails);
+router.get(
+  "/:id",
+  [
+    check("id", "Id not vañid").isInt(),
+    check("id").custom(existCharacterbyId),
+
+    fieldValidator,
+  ],
+  characterDetails
+);
 
 router.post(
   "/",
