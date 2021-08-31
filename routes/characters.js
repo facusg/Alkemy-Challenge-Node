@@ -65,5 +65,4 @@ router.delete(
   ],
   deleteCharacter
 );
-
 module.exports = router;

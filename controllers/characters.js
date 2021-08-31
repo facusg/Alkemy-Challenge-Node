@@ -1,5 +1,6 @@
 const { response } = require("express");
 const Character = require("../models/character");
+const Movie = require("../models/movie");
 
 const charactersList = async (req, res = response) => {
   const { limit = 5, since = 0 } = req.query;
@@ -20,7 +21,9 @@ const charactersList = async (req, res = response) => {
 
 const characterDetails = async (req, res = response) => {
   const { id } = req.params;
-  const character = await Character.findByPk(id);
+  const character = await Character.findByPk(id, {
+    include: { model: Movie },
+  });
 
   res.json({ character });
 };

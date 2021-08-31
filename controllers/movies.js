@@ -2,6 +2,7 @@ const { response } = require("express");
 const Movie = require("../models/movie");
 
 const { dateCheck } = require("../helpers/dateCheck");
+const Genre = require("../models/genre");
 
 const moviesList = async (req, res = response) => {
   const { limit = 5, since = 0 } = req.query;
@@ -22,7 +23,7 @@ const moviesList = async (req, res = response) => {
 
 const movieDetails = async (req, res = response) => {
   const { id } = req.params;
-  const movie = await Movie.findByPk(id);
+  const movie = await Movie.findByPk(id, {});
 
   res.json({ movie });
 };

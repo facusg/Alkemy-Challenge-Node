@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const sequelize = require("../database/db");
+require("../database/asociations");
 
 class Server {
   constructor() {

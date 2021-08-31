@@ -1,5 +1,6 @@
 const { response } = require("express");
 const Genre = require("../models/genre");
+const Movie = require("../models/movie");
 
 const listGenres = async (req, res) => {
   const { limit = 5, since = 0 } = req.query;
