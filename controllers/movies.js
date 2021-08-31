@@ -11,6 +11,7 @@ const moviesList = async (req, res = response) => {
     Movie.count(query),
     Movie.findAll({
       where: query,
+      attributes: ["id", "title", "img", "date"],
       limit: Number(limit),
       offset: Number(since),
     }),
@@ -33,6 +34,11 @@ const createMovie = async (req, res = response) => {
   if (movieDB) {
     return res.status(401).json({ msg: `${title} is already a movie` });
   }
+  const validDate = dateCheck(date);
+
+  if (!validDate) {
+    return res.status(401).json({ msg: "Invalid format date" });
+  }
   const data = {
     ...body,
     title: title.toUpperCase(),
@@ -49,7 +55,11 @@ const updateMovie = async (req, res = response) => {
   const { id } = req.params;
   const { state, rate, date, ...data } = req.body;
 
-  //const newDate = dateCheck(date);
+  const validDate = dateCheck(date);
+
+  if (!validDate) {
+    return res.status(401).json({ msg: "Invalid format date" });
+  }
 
   if (rate) {
     if (!(rate >= 1 && rate <= 5)) {
@@ -57,7 +67,10 @@ const updateMovie = async (req, res = response) => {
     }
   }
 
-  await Movie.update({ ...data, state, rate, date }, { where: { id } });
+  await Movie.update(
+    { ...data, state, rate, date: validDate },
+    { where: { id } }
+  );
 
   const movie = await Movie.findByPk(id);
 

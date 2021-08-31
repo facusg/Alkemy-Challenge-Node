@@ -9,6 +9,7 @@ const charactersList = async (req, res = response) => {
     Character.count(query),
     Character.findAll({
       where: query,
+      attributes: ["id", "name", "img"],
       limit: Number(limit),
       offset: Number(since),
     }),
