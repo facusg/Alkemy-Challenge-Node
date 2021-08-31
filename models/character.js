@@ -5,7 +5,7 @@ class Character extends Model {}
 Character.init(
   {
     name: { type: DataTypes.STRING, allowNull: false },
-    img: { type: DataTypes.STRING, allowNull: false },
+    img: { type: DataTypes.STRING },
     age: { type: DataTypes.INTEGER, allowNull: false },
     weight: { type: DataTypes.FLOAT, allowNull: false },
     story: { type: DataTypes.STRING, allowNull: false },
