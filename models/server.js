@@ -12,6 +12,7 @@ class Server {
       auth: "/auth",
       characters: "/api/characters",
       movies: "/api/movies",
+      genre: "/api/genres",
     };
 
     //Database
@@ -47,6 +48,7 @@ class Server {
     this.app.use(this.paths.auth, require("../routes/auth"));
     this.app.use(this.paths.characters, require("../routes/characters"));
     this.app.use(this.paths.movies, require("../routes/movies"));
+    this.app.use(this.paths.genre, require("../routes/genres"));
   }
 
   listen() {

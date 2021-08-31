@@ -1,4 +1,5 @@
 const Character = require("../models/character");
+const Genre = require("../models/genre");
 const Movie = require("../models/movie");
 
 const existCharacterbyId = async (id) => {
@@ -15,4 +16,11 @@ const existMoviebyId = async (id) => {
   }
 };
 
-module.exports = { existCharacterbyId, existMoviebyId };
+const existGenrebyId = async (id) => {
+  const existGenre = await Genre.findByPk(id);
+  if (!existGenre) {
+    throw new Error(`Id not exist in database`);
+  }
+};
+
+module.exports = { existCharacterbyId, existMoviebyId, existGenrebyId };
