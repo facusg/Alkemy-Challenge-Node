@@ -1,8 +1,20 @@
 const { response } = require("express");
 const Character = require("../models/character");
 
-const charactersList = (req, res = response) => {
-  res.json({ msg: "character list" });
+const charactersList = async (req, res = response) => {
+  const { limit = 5, since = 0 } = req.query;
+  const query = { state: true };
+
+  const [total, characters] = await Promise.all([
+    Character.count(query),
+    Character.findAll({
+      where: query,
+      limit: Number(limit),
+      offset: Number(since),
+    }),
+  ]);
+
+  res.json({ total, characters });
 };
 
 const characterDetails = (req, res = response) => {
