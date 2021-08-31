@@ -11,7 +11,10 @@ const {
   removeMovieToCharacter,
 } = require("../controllers/characters");
 
-const { existCharacterbyId } = require("../helpers/db-validator");
+const {
+  existCharacterbyId,
+  existMoviebyId,
+} = require("../helpers/db-validator");
 const { checkJWT } = require("../middlewares/checkJWT");
 
 const { fieldValidator } = require("../middlewares/field-validator");
@@ -57,9 +60,29 @@ router.put(
   updateCharacter
 );
 
-router.put("/:id/:movieId", addMovieToCharacter);
+router.put(
+  "/:id/:movieId",
+  [
+    checkJWT,
+    check("id", "Id not vañid").isInt(),
+    check("id").custom(existCharacterbyId),
+    check("movieId").custom(existMoviebyId),
+    fieldValidator,
+  ],
+  addMovieToCharacter
+);
 
-router.delete("/:id/:movieId", removeMovieToCharacter);
+router.delete(
+  "/:id/:movieId",
+  [
+    checkJWT,
+    check("id", "Id not vañid").isInt(),
+    check("id").custom(existCharacterbyId),
+    check("movieId").custom(existMoviebyId),
+    fieldValidator,
+  ],
+  removeMovieToCharacter
+);
 
 router.delete(
   "/:id",

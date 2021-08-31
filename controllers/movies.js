@@ -3,6 +3,7 @@ const Movie = require("../models/movie");
 
 const { dateCheck } = require("../helpers/dateCheck");
 const Genre = require("../models/genre");
+const Character = require("../models/character");
 
 const moviesList = async (req, res = response) => {
   const { limit = 5, since = 0 } = req.query;
@@ -23,7 +24,9 @@ const moviesList = async (req, res = response) => {
 
 const movieDetails = async (req, res = response) => {
   const { id } = req.params;
-  const movie = await Movie.findByPk(id, {});
+  const movie = await Movie.findByPk(id, {
+    include: { model: Character, as: "characters", attribute: ["id", "name"] },
+  });
 
   res.json({ movie });
 };
@@ -57,22 +60,22 @@ const updateMovie = async (req, res = response) => {
   const { id } = req.params;
   const { state, rate, date, ...data } = req.body;
 
-  const validDate = dateCheck(date);
-
-  if (!validDate) {
-    return res.status(401).json({ msg: "Invalid format date" });
-  }
-
   if (rate) {
     if (!(rate >= 1 && rate <= 5)) {
       return res.status(401).json({ msg: "Rate must be between 1 - 5 " });
     }
   }
 
-  await Movie.update(
-    { ...data, state, rate, date: validDate },
-    { where: { id } }
-  );
+  let validDate;
+  if (date) {
+    validDate = dateCheck(date);
+    if (!validDate) {
+      return res.status(401).json({ msg: "Invalid format date" });
+    }
+    await Movie.update({ ...data, state, rate, date }, { where: { id } });
+  } else {
+    await Movie.update({ ...data, state, rate }, { where: { id } });
+  }
 
   const movie = await Movie.findByPk(id);
 
@@ -91,10 +94,39 @@ const deleteMovie = async (req, res = response) => {
   res.json({ movieDelete });
 };
 
+const addCharacaterToMovie = async (req, res = response) => {
+  const { id, characterId } = req.params;
+
+  const movie = await Movie.findByPk(id);
+
+  const character = await Character.findByPk(characterId);
+
+  if (!(await movie.hasCharacter(character))) {
+    movie.addCharacter(character);
+  }
+
+  res.json({ movie });
+};
+const deleteCharacaterToMovie = async (req, res = response) => {
+  const { id, characterId } = req.params;
+
+  const movie = await Movie.findByPk(id);
+
+  const character = await Character.findByPk(characterId);
+
+  if (await movie.hasCharacter(character)) {
+    movie.removeCharacter(character);
+  }
+
+  res.json({ movie });
+};
+
 module.exports = {
   moviesList,
   movieDetails,
   createMovie,
   updateMovie,
   deleteMovie,
+  addCharacaterToMovie,
+  deleteCharacaterToMovie,
 };

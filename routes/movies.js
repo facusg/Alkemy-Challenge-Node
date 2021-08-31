@@ -10,6 +10,8 @@ const {
   createMovie,
   updateMovie,
   deleteMovie,
+  addCharacaterToMovie,
+  deleteCharacaterToMovie,
 } = require("../controllers/movies");
 const { existMoviebyId } = require("../helpers/db-validator");
 const { isRateValid } = require("../helpers/rateCheck");
@@ -51,6 +53,10 @@ router.put(
   ],
   updateMovie
 );
+
+router.put("/:id/:characterId", addCharacaterToMovie);
+
+router.delete("/:id/:characterId", deleteCharacaterToMovie);
 
 router.delete("/:id", [], deleteMovie);
 
