@@ -44,8 +44,26 @@ router.post(
   createCharacter
 );
 
-router.put("/:id", updateCharacter);
+router.put(
+  "/:id",
+  [
+    checkJWT,
+    check("id", "Id not vañid").isInt(),
+    check("id").custom(existCharacterbyId),
+    fieldValidator,
+  ],
+  updateCharacter
+);
 
-router.delete("/:id", deleteCharacter);
+router.delete(
+  "/:id",
+  [
+    checkJWT,
+    check("id", "Id not vañid").isInt(),
+    check("id").custom(existCharacterbyId),
+    fieldValidator,
+  ],
+  deleteCharacter
+);
 
 module.exports = router;

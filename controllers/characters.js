@@ -43,12 +43,27 @@ const createCharacter = async (req, res = response) => {
   res.status(201).json(character);
 };
 
-const updateCharacter = (req, res = response) => {
-  res.json({ msg: "updateCharacter" });
+const updateCharacter = async (req, res = response) => {
+  const { id } = req.params;
+  const { state, ...data } = req.body;
+
+  await Character.update({ ...data, state }, { where: { id } });
+
+  const character = await Character.findByPk(id);
+
+  res.json({ character });
 };
 
-const deleteCharacter = (req, res = response) => {
-  res.json({ msg: "deleteCharacter" });
+const deleteCharacter = async (req, res = response) => {
+  const { id } = req.params;
+
+  const characterDelete = await Character.findByPk(id);
+
+  characterDelete.state = false;
+
+  await characterDelete.save();
+
+  res.json({ characterDelete });
 };
 
 module.exports = {
