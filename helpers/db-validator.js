@@ -1,4 +1,5 @@
 const Character = require("../models/character");
+const Movie = require("../models/movie");
 
 const existCharacterbyId = async (id) => {
   const existCharacter = await Character.findByPk(id);
@@ -7,4 +8,11 @@ const existCharacterbyId = async (id) => {
   }
 };
 
-module.exports = { existCharacterbyId };
+const existMoviebyId = async (id) => {
+  const existMovie = await Movie.findByPk(id);
+  if (!existMovie) {
+    throw new Error(`Id not exist in database`);
+  }
+};
+
+module.exports = { existCharacterbyId, existMoviebyId };

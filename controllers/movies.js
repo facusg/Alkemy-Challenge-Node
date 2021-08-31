@@ -1,19 +1,85 @@
+const { response } = require("express");
+const Movie = require("../models/movie");
+
+const { dateCheck } = require("../helpers/dateCheck");
+
 const moviesList = async (req, res = response) => {
-  res.json({ msg: "Movies list" });
+  const { limit = 5, since = 0 } = req.query;
+  const query = { state: true };
+
+  const [total, movies] = await Promise.all([
+    Movie.count(query),
+    Movie.findAll({
+      where: query,
+      limit: Number(limit),
+      offset: Number(since),
+    }),
+  ]);
+
+  res.json({ total, movies });
 };
 
 const movieDetails = async (req, res = response) => {
-  res.json({ msg: "Movie details" });
+  const { id } = req.params;
+  const movie = await Movie.findByPk(id);
+
+  res.json({ movie });
 };
 
 const createMovie = async (req, res = response) => {
-  res.json({ msg: "Create Movie" });
+  const { title, ...body } = req.body;
+  const movieDB = await Movie.findOne({ where: { title } });
+
+  if (movieDB) {
+    return res.status(401).json({ msg: `${title} is already a movie` });
+  }
+  const data = {
+    ...body,
+    title: title.toUpperCase(),
+  };
+
+  const movie = new Movie(data);
+
+  await movie.save();
+
+  res.status(201).json(movie);
 };
 
 const updateMovie = async (req, res = response) => {
-  res.json({ msg: "Update Movie" });
+  const { id } = req.params;
+  const { state, rate, date, ...data } = req.body;
+
+  //const newDate = dateCheck(date);
+
+  if (rate) {
+    if (!(rate >= 1 && rate <= 5)) {
+      return res.status(401).json({ msg: "Rate must be between 1 - 5 " });
+    }
+  }
+
+  await Movie.update({ ...data, state, rate, date }, { where: { id } });
+
+  const movie = await Movie.findByPk(id);
+
+  res.json({ movie });
 };
 
 const deleteMovie = async (req, res = response) => {
-  res.json({ msg: "Delete Movie" });
+  const { id } = req.params;
+
+  const movieDelete = await Movie.findByPk(id);
+
+  movieDelete.state = false;
+
+  await movieDelete.save();
+
+  res.json({ movieDelete });
+};
+
+module.exports = {
+  moviesList,
+  movieDetails,
+  createMovie,
+  updateMovie,
+  deleteMovie,
 };
