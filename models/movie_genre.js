@@ -1,7 +1,8 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
+
 const Movie = require("../models/movie");
-const Genres = require("../models/genre");
+const Genre = require("./genre");
 
 class MovieGenre extends Model {
   static associate() {

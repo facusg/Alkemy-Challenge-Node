@@ -8,8 +8,10 @@ const {
   listGenres,
   createGenre,
   updateGenre,
+  addMovieToGenre,
+  removeMovieToGenre,
 } = require("../controllers/genres");
-const { existGenrebyId } = require("../helpers/db-validator");
+const { existGenrebyId, existMoviebyId } = require("../helpers/db-validator");
 
 const router = Router();
 
@@ -30,6 +32,30 @@ router.put(
     fieldValidator,
   ],
   updateGenre
+);
+
+router.put(
+  "/:id/:movieId",
+  [
+    checkJWT,
+    check("id", "Id not vañid").isInt(),
+    check("id").custom(existGenrebyId),
+    check("movieId").custom(existMoviebyId),
+    fieldValidator,
+  ],
+  addMovieToGenre
+);
+
+router.delete(
+  "/:id/:movieId",
+  [
+    checkJWT,
+    check("id", "Id not vañid").isInt(),
+    check("id").custom(existGenrebyId),
+    check("movieId").custom(existMoviebyId),
+    fieldValidator,
+  ],
+  removeMovieToGenre
 );
 
 module.exports = router;

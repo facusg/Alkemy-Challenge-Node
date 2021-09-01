@@ -2,7 +2,6 @@ const { response } = require("express");
 const Movie = require("../models/movie");
 
 const { dateCheck } = require("../helpers/dateCheck");
-const Genre = require("../models/genre");
 const Character = require("../models/character");
 
 const moviesList = async (req, res = response) => {

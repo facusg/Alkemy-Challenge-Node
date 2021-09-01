@@ -81,6 +81,15 @@ router.delete(
   deleteCharacaterToMovie
 );
 
-router.delete("/:id", [], deleteMovie);
+router.delete(
+  "/:id",
+  [
+    checkJWT,
+    check("id", "Id not vañid").isInt(),
+    check("id").custom(existMoviebyId),
+    fieldValidator,
+  ],
+  deleteMovie
+);
 
 module.exports = router;

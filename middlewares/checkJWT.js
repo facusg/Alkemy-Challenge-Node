@@ -21,7 +21,7 @@ const checkJWT = async (req, res = response, next) => {
     req.user = user;
 
     next();
-  } catch (error) {
+  } catch (err) {
     console.log(err);
     return res.status(401).json({ msg: "Invalid token" });
   }

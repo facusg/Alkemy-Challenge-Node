@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
+
 const Movie = require("../models/movie");
 const Character = require("../models/character");
 

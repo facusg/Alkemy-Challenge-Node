@@ -10,6 +10,7 @@ const listGenres = async (req, res) => {
     Genre.count(query),
     Genre.findAll({
       attributes: ["id", "name", "img"],
+      include: { model: Movie, as: "movies", attribute: ["id", "title"] },
       limit: Number(limit),
       offset: Number(since),
     }),
@@ -49,4 +50,38 @@ const updateGenre = async (req, res) => {
   res.json({ genre });
 };
 
-module.exports = { listGenres, createGenre, updateGenre };
+const addMovieToGenre = async (req, res) => {
+  const { id, movieId } = req.params;
+
+  const genre = await Genre.findByPk(id);
+
+  const movie = await Movie.findByPk(movieId);
+
+  if (!(await genre.hasMovie(movie))) {
+    genre.addMovie(movie);
+  }
+
+  res.json({ genre });
+};
+
+const removeMovieToGenre = async (req, res) => {
+  const { id, movieId } = req.params;
+
+  const genre = await Genre.findByPk(id);
+
+  const movie = await Movie.findByPk(movieId);
+
+  if (await genre.hasMovie(movie)) {
+    genre.removeMovie(movie);
+  }
+
+  res.json({ genre });
+};
+
+module.exports = {
+  listGenres,
+  createGenre,
+  updateGenre,
+  addMovieToGenre,
+  removeMovieToGenre,
+};
