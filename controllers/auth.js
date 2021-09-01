@@ -14,23 +14,17 @@ const login = async (req, res = response) => {
     //check Email in database
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res
-        .status(400)
-        .json({ msg: "Incorrect email or password. - email" });
+      return res.status(400).json({ msg: "Incorrect email or password." });
     }
 
     // chech State=true
     if (!user.state) {
-      return res
-        .status(400)
-        .json({ msg: "Incorrect email or password. - state:false" });
+      return res.status(400).json({ msg: "Incorrect email or password." });
     }
 
     const validPassword = bcryptjs.compareSync(password, user.password);
     if (!validPassword) {
-      return res
-        .status(400)
-        .json({ msg: "Incorrect email or password. - Password" });
+      return res.status(400).json({ msg: "Incorrect email or password." });
     }
 
     //Create JWT

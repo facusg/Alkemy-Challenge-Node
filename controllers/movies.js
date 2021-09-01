@@ -59,6 +59,10 @@ const updateMovie = async (req, res = response) => {
   const { id } = req.params;
   const { state, rate, date, ...data } = req.body;
 
+  if (data.title) {
+    data.title = data.title.toUpperCase();
+  }
+
   if (rate) {
     if (!(rate >= 1 && rate <= 5)) {
       return res.status(401).json({ msg: "Rate must be between 1 - 5 " });

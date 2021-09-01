@@ -43,7 +43,11 @@ const updateGenre = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
 
-  await Genre.update({ data }, { where: { id } });
+  if (data.name) {
+    data.name = data.name.toUpperCase();
+  }
+
+  await Genre.update({ ...data }, { where: { id } });
 
   const genre = await Genre.findByPk(id);
 

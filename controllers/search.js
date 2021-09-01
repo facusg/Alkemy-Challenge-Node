@@ -9,6 +9,8 @@ const Genre = require("../models/genre");
 const charactersSearch = async (req, res) => {
   const { name, weight, age, movie } = req.query;
 
+  const nameUp = name.toUpperCase();
+
   if (movie) {
     const search = await Character.findAll({
       include: {
@@ -24,7 +26,7 @@ const charactersSearch = async (req, res) => {
 
   let query = { [Op.or]: [] };
   if (name) {
-    query[Op.or].push({ name: name });
+    query[Op.or].push({ name: nameUp });
   }
   if (weight) {
     query[Op.or].push({ weight: weight });
