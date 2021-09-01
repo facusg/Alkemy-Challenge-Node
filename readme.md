@@ -1,6 +1,6 @@
 ## Alkemy Challenge Backend - Nodejs
 
-### API endpoint documentation
+### API endpoints documentation
 * [Postman](https://documenter.getpostman.com/view/16728392/U16dSpHs)
 
 ## Endpoints
