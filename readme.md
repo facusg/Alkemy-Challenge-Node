@@ -25,8 +25,8 @@
   * GET/api/movies ?since
 * POST api/movies                            
 * PUT /api/movies/:id                          
-* PUT /api/movies/:id/characterId                     
-* DELETE /api/movies/:id/characterId                
+* PUT /api/movies/:id/:characterId                     
+* DELETE /api/movies/:id/:characterId                
 * DELETE /api/movies/:id                              
 
 ### Genre
@@ -35,7 +35,7 @@
   * GET/api/genres?since
 * POST api/genre                             
 * PUT /api/movies/:id                           
-* PUT /api/movies/:id/movieId                
+* PUT /api/movies/:id/:movieId                
 * DELETE /api/movies/:id/movieId                      
 
 
