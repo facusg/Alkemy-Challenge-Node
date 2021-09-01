@@ -10,4 +10,12 @@ Genre.init(
   { sequelize, modelName: "genre", timestamps: false }
 );
 
+Genre.associations = () => {
+  Genre.belongsTo(Movie, {
+    as: "movies",
+    through: "movie_genre",
+    foreignKey: "movieId",
+  });
+};
+
 module.exports = Genre;

@@ -14,6 +14,7 @@ class Server {
       characters: "/api/characters",
       movies: "/api/movies",
       genre: "/api/genres",
+      search: "/search",
     };
 
     //Database
@@ -50,6 +51,7 @@ class Server {
     this.app.use(this.paths.characters, require("../routes/characters"));
     this.app.use(this.paths.movies, require("../routes/movies"));
     this.app.use(this.paths.genre, require("../routes/genres"));
+    this.app.use(this.paths.search, require("../routes/search"));
   }
 
   listen() {
