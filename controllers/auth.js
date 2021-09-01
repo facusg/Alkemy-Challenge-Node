@@ -3,6 +3,7 @@ const User = require("../models/user");
 const bcryptjs = require("bcryptjs");
 
 const { createJWT } = require("../helpers/createJWT");
+const { sendEmail } = require("../helpers/sendMail");
 
 const login = async (req, res = response) => {
   const { email, password } = req.body;
@@ -63,6 +64,8 @@ const register = async (req, res = response) => {
 
   //Create JWT
   const token = await createJWT(user.id);
+
+  sendEmail(email, name);
 
   res.json({
     user,
